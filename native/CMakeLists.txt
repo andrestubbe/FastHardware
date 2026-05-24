@@ -32,6 +32,6 @@ target_link_libraries(fasthardware pdh wbemuuid ole32 oleaut32)
 
 # Set output directory to Java resources folder
 set_target_properties(fasthardware PROPERTIES 
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/../src/main/resources"
-    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/../src/main/resources"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/../src/main/resources/native"
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/../src/main/resources/native"
 )
