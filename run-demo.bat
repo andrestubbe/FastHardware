@@ -4,6 +4,6 @@ echo FastHardware Demo (Native PDH)
 echo ===========================================
 
 cd examples\Demo
-call mvn clean compile exec:java
+call mvn -q clean compile exec:java
 cd ..\..
 pause
