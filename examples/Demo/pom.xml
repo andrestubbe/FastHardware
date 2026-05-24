@@ -13,6 +13,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <repositories>
@@ -34,7 +35,13 @@
         <dependency>
             <groupId>com.github.andrestubbe</groupId>
             <artifactId>fastterminal</artifactId>
-            <version>v0.1.0</version>
+            <version>0.1.0</version>
+        </dependency>
+        <!-- FastKeyboard (For UI duplicate) -->
+        <dependency>
+            <groupId>com.github.andrestubbe</groupId>
+            <artifactId>FastKeyboard</artifactId>
+            <version>0.1.0</version>
         </dependency>
     </dependencies>
 
@@ -50,6 +57,11 @@
                     <additionalClasspathElements>
                         <additionalClasspathElement>${project.basedir}/../../target/classes</additionalClasspathElement>
                     </additionalClasspathElements>
+                    <systemPropertyVariables>
+                        <file.encoding>UTF-8</file.encoding>
+                        <sun.stdout.encoding>UTF-8</sun.stdout.encoding>
+                        <sun.stderr.encoding>UTF-8</sun.stderr.encoding>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
