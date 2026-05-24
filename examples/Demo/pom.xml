@@ -28,9 +28,6 @@
             <groupId>com.github.andrestubbe</groupId>
             <artifactId>fasthardware</artifactId>
             <version>0.1.0</version>
-            <!-- We will provide this via classpaths since it's not on jitpack yet -->
-            <scope>system</scope>
-            <systemPath>${project.basedir}/../../target/fasthardware-0.1.0.jar</systemPath>
         </dependency>
 
         <!-- FastTerminal (For Colors) -->
@@ -49,6 +46,7 @@
                 <version>3.1.0</version>
                 <configuration>
                     <mainClass>fasthardware.Demo</mainClass>
+                    <includeSystemScope>true</includeSystemScope>
                     <additionalClasspathElements>
                         <additionalClasspathElement>${project.basedir}/../../target/classes</additionalClasspathElement>
                     </additionalClasspathElements>
