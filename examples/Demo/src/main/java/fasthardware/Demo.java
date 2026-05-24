@@ -13,9 +13,6 @@ public class Demo {
     private static final String GRAY = "\033[90m";
 
     public static void main(String[] args) {
-        try {
-            FastTerminal.setAnsiRawMode(true);
-        } catch (Throwable t) { }
 
         System.out.println(CYAN + "===========================================");
         System.out.println(YELLOW + " FastHardware v0.1.0 - Native Telemetry ");
@@ -63,8 +60,6 @@ public class Demo {
         } catch (Exception e) {
             System.err.println(RED + "Failed to initialize FastHardware: " + e.getMessage() + RESET);
             e.printStackTrace();
-        } finally {
-            try { FastTerminal.setAnsiRawMode(false); } catch (Throwable t) { }
         }
     }
 }
