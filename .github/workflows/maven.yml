@@ -1,0 +1,41 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Configure CMake
+      run: cmake -B native/build -S native
+
+    - name: Build Native DLL
+      run: cmake --build native/build --config Release
+
+    - name: Copy DLL to Resources
+      run: |
+        mkdir -p src/main/resources
+        cp native/build/Release/fasthardware.dll src/main/resources/ || true
+
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+
+    - name: Upload Native DLL
+      uses: actions/upload-artifact@v4
+      with:
+        name: fasthardware-dll
+        path: src/main/resources/fasthardware.dll
