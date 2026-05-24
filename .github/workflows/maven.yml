@@ -26,11 +26,6 @@ jobs:
     - name: Build Native DLL
       run: cmake --build native/build --config Release
 
-    - name: Copy DLL to Resources
-      run: |
-        mkdir -p src/main/resources
-        cp native/build/Release/fasthardware.dll src/main/resources/ || true
-
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
