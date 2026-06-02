@@ -84,9 +84,9 @@ Download the latest JARs directly to add them to your classpath:
 ---
 
 ## Documentation
-*   **[ARCHITECTURE.md](ARCHITECTURE.md)**: Details on PDH and WMI implementation.
-*   **[REFERENCE.md](REFERENCE.md)**: Full API and JNI contracts.
-*   **[ROADMAP.md](ROADMAP.md)**: Future development and milestones.
+*   **[ARCHITECTURE.md](docs/ARCHITECTURE.md)**: Details on PDH and WMI implementation.
+*   **[REFERENCE.md](docs/REFERENCE.md)**: Full API and JNI contracts.
+*   **[ROADMAP.md](docs/ROADMAP.md)**: Future development and milestones.
 
 ---
 
