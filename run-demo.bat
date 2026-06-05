@@ -1,9 +1,7 @@
-@echo off
+﻿@echo off
 chcp 65001 > nul
 
 echo [INFO] Building FastHardware library...
-call mvn -q package -DskipTests
-if %ERRORLEVEL% NEQ 0 ( echo Build failed. & pause & exit /b )
 
 echo [INFO] Compiling Demo...
 cd examples\Demo

@@ -1,9 +1,6 @@
-@echo off
-echo Building main project...
-call mvn clean package -DskipTests
-if %ERRORLEVEL% NEQ 0 (
+﻿@echo off
     echo.
-    echo ❌ Maven build failed.
+    echo âŒ Maven build failed.
     pause
     exit /b %ERRORLEVEL%
 )
