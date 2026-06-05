@@ -1,11 +1,10 @@
-﻿@echo off
-chcp 65001 > nul
+@echo off
 
 echo [INFO] Building FastHardware library...
 
 echo [INFO] Compiling Demo...
 cd examples\Demo
-call mvn -q compile dependency:copy-dependencies -U -DincludeScope=runtime -DskipTests
+call mvn compile dependency:copy-dependencies -U -DincludeScope=runtime -DskipTests
 if %ERRORLEVEL% NEQ 0 ( cd ..\.. & echo Compile failed. & pause & exit /b )
 
 echo [INFO] Launching UI Demo...
