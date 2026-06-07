@@ -10,7 +10,7 @@
 
 **FastHardware** provides direct access to system performance counters and hardware sensors. By using native Win32/WMI hooks, it delivers accurate telemetry without the performance hit of traditional Java system-querying methods.
 
-[![FastKeyboard Showcase](docs/screenshot.png)](https://www.youtube.com/watch?v=BZsqQl7WqWk)
+[![FastHardware Showcase](docs/screenshot.png)](https://www.youtube.com/watch?v=BZsqQl7WqWk)
 
 
 ---
@@ -47,14 +47,14 @@ Add the JitPack repository and the dependencies to your `pom.xml`:
     <!-- FastHardware Library -->
     <dependency>
         <groupId>com.github.andrestubbe</groupId>
-        <artifactId>fasthardware</artifactId>
+        <artifactId>FastHardware</artifactId>
         <version>0.1.0</version>
     </dependency>
 
     <!-- FastCore (Required Native Loader) -->
     <dependency>
         <groupId>com.github.andrestubbe</groupId>
-        <artifactId>fastcore</artifactId>
+        <artifactId>FastCore</artifactId>
         <version>0.1.0</version>
     </dependency>
 </dependencies>
@@ -67,16 +67,16 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.andrestubbe:fasthardware:0.1.0'
-    implementation 'com.github.andrestubbe:fastcore:0.1.0'
+    implementation 'com.github.andrestubbe:FastHardware:0.1.0'
+    implementation 'com.github.andrestubbe:FastCore:0.1.0'
 }
 ```
 
 ### Option 3: Direct Download (No Build Tool)
 Download the latest JARs directly to add them to your classpath:
 
-1. 📦 **[fasthardware-0.1.0.jar](https://github.com/andrestubbe/FastHardware/releases/download/0.1.0/fasthardware-0.1.0.jar)** (The Core Library)
-2. ⚙️ **[fastcore-0.1.0.jar](https://github.com/andrestubbe/FastCore/releases/download/0.1.0/fastcore-0.1.0.jar)** (The Mandatory Native Loader)
+1. 📦 **[FastHardware-0.1.0.jar](https://github.com/andrestubbe/FastHardware/releases/download/0.1.0/FastHardware-0.1.0.jar)** (The Core Library)
+2. ⚙️ **[FastCore-0.1.0.jar](https://github.com/andrestubbe/FastCore/releases/download/0.1.0/FastCore-0.1.0.jar)** (The Mandatory Native Loader)
 
 > [!IMPORTANT]
 > All JARs must be in your classpath for the native JNI calls to function correctly.
