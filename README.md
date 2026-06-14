@@ -1,4 +1,4 @@
-# FastHardware 0.1.0 [ALPHA-2026-06] — Native Hardware Telemetry API for Java
+# FastHardware 0.1.0 [ALPHA-2026-06-07] — Native Hardware Telemetry API for Java
 
 [![Status](https://img.shields.io/badge/status-0.1.0-brightgreen.svg)](https://github.com/andrestubbe/FastHardware/releases/tag/0.1.0)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
