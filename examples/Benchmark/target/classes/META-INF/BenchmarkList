@@ -1,0 +1,2 @@
+JMH S 32 fasthardware.benchmark.Benchmark S 77 fasthardware.benchmark.jmh_generated.Benchmark_benchmarkGetFreeMemory_jmhTest S 22 benchmarkGetFreeMemory S 10 Throughput E A 1 1 1 E I 1 2 T 3 1 s E I 1 3 T 3 1 s E I 1 1 E E E E E E U 12 MILLISECONDS E E 
+JMH S 32 fasthardware.benchmark.Benchmark S 81 fasthardware.benchmark.jmh_generated.Benchmark_benchmarkGetGlobalCpuUsage_jmhTest S 26 benchmarkGetGlobalCpuUsage S 10 Throughput E A 1 1 1 E I 1 2 T 3 1 s E I 1 3 T 3 1 s E I 1 1 E E E E E E U 12 MILLISECONDS E E 
