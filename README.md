@@ -281,13 +281,10 @@ MIT License — See [LICENSE](LICENSE) for details.
 
 ## Related Projects
 
-- [FastCore](https://github.com/andrestubbe/FastCore) — Native JNI DLL loader for the FastJava ecosystem
-- [FastDWM](https://github.com/andrestubbe/FastDWM) — Windows DWM bridge (VSync, title bar theming, WinMM timers)
-- [FastGPU](https://github.com/andrestubbe/FastGPU) — Vulkan compute kernel dispatch for Java
-- [FastDisplay](https://github.com/andrestubbe/FastDisplay) — Native display refresh rate and resolution detection
-- [FastExecution](https://github.com/andrestubbe/FastExecution) — Sub-millisecond precision named loop and delay scheduler
-- [FastAnimation](https://github.com/andrestubbe/FastAnimation) — Ultra-fast native timeline animation engine
-- [FastTween](https://github.com/andrestubbe/FastTween) — Zero-overhead pooled tweening engine
+- [FastCore](https://github.com/andrestubbe/FastCore) — Required native JNI DLL loader (auto-extracts `fasthardware.dll` at runtime)
+- [FastDisplay](https://github.com/andrestubbe/FastDisplay) — Native display detection: refresh rate, resolution, EDID, HDR (Win32 DXGI/EnumDisplayDevices)
+- [FastDWM](https://github.com/andrestubbe/FastDWM) — Windows DWM bridge: VSync, title bar theming, WinMM 1ms timers
+- [FastGPU](https://github.com/andrestubbe/FastGPU) — Vulkan compute kernel dispatch — pair with FastHardware to gate GPU workloads on thermal state
 
 ---
 
