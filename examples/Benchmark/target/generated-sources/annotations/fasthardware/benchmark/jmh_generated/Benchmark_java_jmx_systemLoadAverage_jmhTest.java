@@ -33,7 +33,7 @@ import org.openjdk.jmh.results.AggregationPolicy;
 import org.openjdk.jmh.runner.FailureAssistException;
 
 import fasthardware.benchmark.jmh_generated.Benchmark_jmhType;
-public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
+public final class Benchmark_java_jmx_systemLoadAverage_jmhTest {
 
     byte p000, p001, p002, p003, p004, p005, p006, p007, p008, p009, p010, p011, p012, p013, p014, p015;
     byte p016, p017, p018, p019, p020, p021, p022, p023, p024, p025, p026, p027, p028, p029, p030, p031;
@@ -58,7 +58,7 @@ public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
     Blackhole blackhole;
     Control notifyControl;
 
-    public BenchmarkTaskResult benchmarkGetFreeMemory_Throughput(InfraControl control, ThreadParams threadParams) throws Throwable {
+    public BenchmarkTaskResult java_jmx_systemLoadAverage_Throughput(InfraControl control, ThreadParams threadParams) throws Throwable {
         this.benchmarkParams = control.benchmarkParams;
         this.iterationParams = control.iterationParams;
         this.threadParams    = threadParams;
@@ -75,18 +75,18 @@ public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
 
             control.announceWarmupReady();
             while (control.warmupShouldWait) {
-                blackhole.consume(l_benchmark0_G.benchmarkGetFreeMemory());
+                blackhole.consume(l_benchmark0_G.java_jmx_systemLoadAverage());
                 if (control.shouldYield) Thread.yield();
                 res.allOps++;
             }
 
             notifyControl.startMeasurement = true;
-            benchmarkGetFreeMemory_thrpt_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, l_benchmark0_G);
+            java_jmx_systemLoadAverage_thrpt_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, l_benchmark0_G);
             notifyControl.stopMeasurement = true;
             control.announceWarmdownReady();
             try {
                 while (control.warmdownShouldWait) {
-                    blackhole.consume(l_benchmark0_G.benchmarkGetFreeMemory());
+                    blackhole.consume(l_benchmark0_G.java_jmx_systemLoadAverage());
                     if (control.shouldYield) Thread.yield();
                     res.allOps++;
                 }
@@ -129,19 +129,19 @@ public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
             res.measuredOps *= opsPerInv;
             res.measuredOps /= batchSize;
             BenchmarkTaskResult results = new BenchmarkTaskResult((long)res.allOps, (long)res.measuredOps);
-            results.add(new ThroughputResult(ResultRole.PRIMARY, "benchmarkGetFreeMemory", res.measuredOps, res.getTime(), benchmarkParams.getTimeUnit()));
+            results.add(new ThroughputResult(ResultRole.PRIMARY, "java_jmx_systemLoadAverage", res.measuredOps, res.getTime(), benchmarkParams.getTimeUnit()));
             this.blackhole.evaporate("Yes, I am Stephen Hawking, and know a thing or two about black holes.");
             return results;
         } else
             throw new IllegalStateException("Harness failed to distribute threads among groups properly");
     }
 
-    public static void benchmarkGetFreeMemory_thrpt_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, Benchmark_jmhType l_benchmark0_G) throws Throwable {
+    public static void java_jmx_systemLoadAverage_thrpt_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, Benchmark_jmhType l_benchmark0_G) throws Throwable {
         long operations = 0;
         long realTime = 0;
         result.startTime = System.nanoTime();
         do {
-            blackhole.consume(l_benchmark0_G.benchmarkGetFreeMemory());
+            blackhole.consume(l_benchmark0_G.java_jmx_systemLoadAverage());
             operations++;
         } while(!control.isDone);
         result.stopTime = System.nanoTime();
@@ -150,7 +150,7 @@ public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
     }
 
 
-    public BenchmarkTaskResult benchmarkGetFreeMemory_AverageTime(InfraControl control, ThreadParams threadParams) throws Throwable {
+    public BenchmarkTaskResult java_jmx_systemLoadAverage_AverageTime(InfraControl control, ThreadParams threadParams) throws Throwable {
         this.benchmarkParams = control.benchmarkParams;
         this.iterationParams = control.iterationParams;
         this.threadParams    = threadParams;
@@ -167,18 +167,18 @@ public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
 
             control.announceWarmupReady();
             while (control.warmupShouldWait) {
-                blackhole.consume(l_benchmark0_G.benchmarkGetFreeMemory());
+                blackhole.consume(l_benchmark0_G.java_jmx_systemLoadAverage());
                 if (control.shouldYield) Thread.yield();
                 res.allOps++;
             }
 
             notifyControl.startMeasurement = true;
-            benchmarkGetFreeMemory_avgt_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, l_benchmark0_G);
+            java_jmx_systemLoadAverage_avgt_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, l_benchmark0_G);
             notifyControl.stopMeasurement = true;
             control.announceWarmdownReady();
             try {
                 while (control.warmdownShouldWait) {
-                    blackhole.consume(l_benchmark0_G.benchmarkGetFreeMemory());
+                    blackhole.consume(l_benchmark0_G.java_jmx_systemLoadAverage());
                     if (control.shouldYield) Thread.yield();
                     res.allOps++;
                 }
@@ -221,19 +221,19 @@ public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
             res.measuredOps *= opsPerInv;
             res.measuredOps /= batchSize;
             BenchmarkTaskResult results = new BenchmarkTaskResult((long)res.allOps, (long)res.measuredOps);
-            results.add(new AverageTimeResult(ResultRole.PRIMARY, "benchmarkGetFreeMemory", res.measuredOps, res.getTime(), benchmarkParams.getTimeUnit()));
+            results.add(new AverageTimeResult(ResultRole.PRIMARY, "java_jmx_systemLoadAverage", res.measuredOps, res.getTime(), benchmarkParams.getTimeUnit()));
             this.blackhole.evaporate("Yes, I am Stephen Hawking, and know a thing or two about black holes.");
             return results;
         } else
             throw new IllegalStateException("Harness failed to distribute threads among groups properly");
     }
 
-    public static void benchmarkGetFreeMemory_avgt_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, Benchmark_jmhType l_benchmark0_G) throws Throwable {
+    public static void java_jmx_systemLoadAverage_avgt_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, Benchmark_jmhType l_benchmark0_G) throws Throwable {
         long operations = 0;
         long realTime = 0;
         result.startTime = System.nanoTime();
         do {
-            blackhole.consume(l_benchmark0_G.benchmarkGetFreeMemory());
+            blackhole.consume(l_benchmark0_G.java_jmx_systemLoadAverage());
             operations++;
         } while(!control.isDone);
         result.stopTime = System.nanoTime();
@@ -242,7 +242,7 @@ public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
     }
 
 
-    public BenchmarkTaskResult benchmarkGetFreeMemory_SampleTime(InfraControl control, ThreadParams threadParams) throws Throwable {
+    public BenchmarkTaskResult java_jmx_systemLoadAverage_SampleTime(InfraControl control, ThreadParams threadParams) throws Throwable {
         this.benchmarkParams = control.benchmarkParams;
         this.iterationParams = control.iterationParams;
         this.threadParams    = threadParams;
@@ -259,7 +259,7 @@ public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
 
             control.announceWarmupReady();
             while (control.warmupShouldWait) {
-                blackhole.consume(l_benchmark0_G.benchmarkGetFreeMemory());
+                blackhole.consume(l_benchmark0_G.java_jmx_systemLoadAverage());
                 if (control.shouldYield) Thread.yield();
                 res.allOps++;
             }
@@ -269,12 +269,12 @@ public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
             int batchSize = iterationParams.getBatchSize();
             int opsPerInv = benchmarkParams.getOpsPerInvocation();
             SampleBuffer buffer = new SampleBuffer();
-            benchmarkGetFreeMemory_sample_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, buffer, targetSamples, opsPerInv, batchSize, l_benchmark0_G);
+            java_jmx_systemLoadAverage_sample_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, buffer, targetSamples, opsPerInv, batchSize, l_benchmark0_G);
             notifyControl.stopMeasurement = true;
             control.announceWarmdownReady();
             try {
                 while (control.warmdownShouldWait) {
-                    blackhole.consume(l_benchmark0_G.benchmarkGetFreeMemory());
+                    blackhole.consume(l_benchmark0_G.java_jmx_systemLoadAverage());
                     if (control.shouldYield) Thread.yield();
                     res.allOps++;
                 }
@@ -314,14 +314,14 @@ public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
             res.allOps /= batchSize;
             res.measuredOps *= opsPerInv;
             BenchmarkTaskResult results = new BenchmarkTaskResult((long)res.allOps, (long)res.measuredOps);
-            results.add(new SampleTimeResult(ResultRole.PRIMARY, "benchmarkGetFreeMemory", buffer, benchmarkParams.getTimeUnit()));
+            results.add(new SampleTimeResult(ResultRole.PRIMARY, "java_jmx_systemLoadAverage", buffer, benchmarkParams.getTimeUnit()));
             this.blackhole.evaporate("Yes, I am Stephen Hawking, and know a thing or two about black holes.");
             return results;
         } else
             throw new IllegalStateException("Harness failed to distribute threads among groups properly");
     }
 
-    public static void benchmarkGetFreeMemory_sample_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, SampleBuffer buffer, int targetSamples, long opsPerInv, int batchSize, Benchmark_jmhType l_benchmark0_G) throws Throwable {
+    public static void java_jmx_systemLoadAverage_sample_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, SampleBuffer buffer, int targetSamples, long opsPerInv, int batchSize, Benchmark_jmhType l_benchmark0_G) throws Throwable {
         long realTime = 0;
         long operations = 0;
         int rnd = (int)System.nanoTime();
@@ -336,7 +336,7 @@ public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
             }
             for (int b = 0; b < batchSize; b++) {
                 if (control.volatileSpoiler) return;
-                blackhole.consume(l_benchmark0_G.benchmarkGetFreeMemory());
+                blackhole.consume(l_benchmark0_G.java_jmx_systemLoadAverage());
             }
             if (sample) {
                 buffer.add((System.nanoTime() - time) / opsPerInv);
@@ -354,7 +354,7 @@ public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
     }
 
 
-    public BenchmarkTaskResult benchmarkGetFreeMemory_SingleShotTime(InfraControl control, ThreadParams threadParams) throws Throwable {
+    public BenchmarkTaskResult java_jmx_systemLoadAverage_SingleShotTime(InfraControl control, ThreadParams threadParams) throws Throwable {
         this.benchmarkParams = control.benchmarkParams;
         this.iterationParams = control.iterationParams;
         this.threadParams    = threadParams;
@@ -371,7 +371,7 @@ public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
             notifyControl.startMeasurement = true;
             RawResults res = new RawResults();
             int batchSize = iterationParams.getBatchSize();
-            benchmarkGetFreeMemory_ss_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, batchSize, l_benchmark0_G);
+            java_jmx_systemLoadAverage_ss_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, batchSize, l_benchmark0_G);
             control.preTearDown();
 
             if (control.isLastIteration()) {
@@ -403,19 +403,19 @@ public final class Benchmark_benchmarkGetFreeMemory_jmhTest {
             int opsPerInv = control.benchmarkParams.getOpsPerInvocation();
             long totalOps = opsPerInv;
             BenchmarkTaskResult results = new BenchmarkTaskResult(totalOps, totalOps);
-            results.add(new SingleShotResult(ResultRole.PRIMARY, "benchmarkGetFreeMemory", res.getTime(), totalOps, benchmarkParams.getTimeUnit()));
+            results.add(new SingleShotResult(ResultRole.PRIMARY, "java_jmx_systemLoadAverage", res.getTime(), totalOps, benchmarkParams.getTimeUnit()));
             this.blackhole.evaporate("Yes, I am Stephen Hawking, and know a thing or two about black holes.");
             return results;
         } else
             throw new IllegalStateException("Harness failed to distribute threads among groups properly");
     }
 
-    public static void benchmarkGetFreeMemory_ss_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, int batchSize, Benchmark_jmhType l_benchmark0_G) throws Throwable {
+    public static void java_jmx_systemLoadAverage_ss_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, int batchSize, Benchmark_jmhType l_benchmark0_G) throws Throwable {
         long realTime = 0;
         result.startTime = System.nanoTime();
         for (int b = 0; b < batchSize; b++) {
             if (control.volatileSpoiler) return;
-            blackhole.consume(l_benchmark0_G.benchmarkGetFreeMemory());
+            blackhole.consume(l_benchmark0_G.java_jmx_systemLoadAverage());
         }
         result.stopTime = System.nanoTime();
         result.realTime = realTime;
