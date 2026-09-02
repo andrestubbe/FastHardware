@@ -1,4 +1,4 @@
-# FastHardware 0.1.1 — Native Hardware Telemetry API for Java
+# FastHardware 0.1.1 [ALPHA-2026-09-02] — Native Hardware Telemetry API for Java
 
 [![Status](https://img.shields.io/badge/status-0.1.1-brightgreen.svg)](https://github.com/andrestubbe/FastHardware/releases/tag/0.1.1)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -6,60 +6,159 @@
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010+-lightgrey.svg)]()
 [![JitPack](https://img.shields.io/badge/JitPack-ready-green.svg)](https://jitpack.io/#andrestubbe/FastHardware)
 
-**⚡ Zero-overhead native hardware telemetry for Java. Monitor CPU usage, CPU temperature, RAM, and GPU temperature directly via Win32 PDH and WMI — no JMX, no process spawning, no bloat.**
+---
 
-**FastHardware** bypasses the JVM's heavy `OperatingSystemMXBean` and shell-based `wmic` calls entirely. By binding directly to Win32 PDH counters and WMI COM objects via JNI, it delivers accurate, low-latency hardware telemetry at native speed.
+**⚡ Zero-overhead native hardware telemetry for Java.**
+
+**FastHardware** gives your Java application direct access to real-time system health — CPU usage, CPU temperature, physical RAM, and GPU temperature — without shelling out to `wmic`, without polling `OperatingSystemMXBean`, and without spawning background processes. By binding directly to Win32 PDH counters and WMI COM objects via JNI, it delivers accurate, low-latency hardware telemetry at native speed.
+
+[**Watch the Demo (YouTube)**](https://www.youtube.com/watch?v=BZsqQl7WqWk)
 
 [![FastHardware Showcase](docs/screenshot.png)](https://www.youtube.com/watch?v=BZsqQl7WqWk)
-
----
-
-## Table of Contents
-- [Features](#features)
-- [Quick Start](#quick-start)
-- [API Quick Reference](#api-quick-reference)
-- [Performance Benchmarks](#performance-benchmarks)
-- [Examples & Demos](#examples--demos)
-- [Installation](#installation)
-- [Documentation](#documentation)
-- [Platform Support](#platform-support)
-- [Related Projects](#related-projects)
-- [License](#license)
-
----
-
-## Features
-
-- **📊 Real-Time Telemetry** — CPU usage %, per-core CPU usage, CPU temperature, physical RAM, GPU temperature.
-- **⚡ Native Win32 Speed** — PDH counters (`\\Processor(_Total)\\% Processor Time`) registered once, polled in microseconds. RAM via `GlobalMemoryStatusEx` (direct kernel table read). Temperature via WMI `MSAcpi_ThermalZoneTemperature` in `ROOT\WMI`.
-- **🧊 Zero Overhead** — All JNI calls use primitives (`jlong`, `jdouble`, `jdoubleArray`). No heap allocation per query.
-- **📦 Atomic Snapshot** — `getSnapshot()` returns a frozen `HardwareSnapshot` record with all fields captured in a single native round-trip.
-- **🔌 FastCore Auto-Load** — `fasthardware.dll` is embedded in the JAR. `FastCore` extracts and loads it at runtime — no manual DLL management.
 
 ---
 
 ## Quick Start
 
 ```java
-// 1. Create a hardware monitor instance (initializes PDH + WMI once)
-FastHardware hw = FastHardware.create();
+import fasthardware.FastHardware;
+import fasthardware.HardwareSnapshot;
 
-// First PDH sample needs ~1s interval to compute CPU rate
-Thread.sleep(1100);
+public class Example {
+    public static void main(String[] args) throws InterruptedException {
+        // Initialize once — opens PDH query + WMI COM connection
+        FastHardware hw = FastHardware.create();
 
-// 2. Get an atomic snapshot of all telemetry
-HardwareSnapshot snap = hw.getSnapshot();
+        // PDH CPU counters need one collection interval (~1s) before returning real data
+        Thread.sleep(1100);
 
-System.out.printf("CPU:      %.1f%%%n",   snap.cpuUsagePercent());
-System.out.printf("CPU Temp: %.1f°C%n",   snap.cpuTemperatureCelsius());
-System.out.printf("RAM:      %d MB free / %d MB total%n",
-    snap.freeRamBytes()  / 1024 / 1024,
-    snap.totalRamBytes() / 1024 / 1024);
-System.out.printf("GPU Temp: %.1f°C%n",   snap.gpuTemperatureCelsius());
+        // Atomic snapshot of all telemetry in a single native call
+        HardwareSnapshot snap = hw.getSnapshot();
+
+        System.out.printf("CPU Usage:    %.1f%%%n",  snap.cpuUsagePercent());
+        System.out.printf("CPU Temp:     %.1f°C%n",  snap.cpuTemperatureCelsius());
+        System.out.printf("RAM Free:     %d MB%n",   snap.freeRamBytes()  / 1024 / 1024);
+        System.out.printf("RAM Total:    %d MB%n",   snap.totalRamBytes() / 1024 / 1024);
+        System.out.printf("GPU Temp:     %.1f°C%n",  snap.gpuTemperatureCelsius());
+
+        // Or query individual metrics
+        double[] perCore = hw.getPerCoreCpuUsage();
+        for (int i = 0; i < perCore.length; i++) {
+            System.out.printf("  Core %d:  %.1f%%%n", i, perCore[i]);
+        }
+    }
+}
 ```
 
-> [!IMPORTANT]
-> PDH CPU counters require **two collection intervals** to compute a rate. Call `hw.getSnapshot()` once, wait ~1 second, then read real values. FastHardware handles this automatically after the first poll.
+---
+
+## Table of Contents
+
+- [Why FastHardware?](#why-fasthardware)
+- [Key Features](#key-features)
+- [Real-Life Examples](#real-life-examples)
+- [Performance Benchmarks](#performance-benchmarks)
+- [API Quick Reference](#api-quick-reference)
+- [Examples & Demos](#examples--demos)
+- [Installation](#installation)
+- [Documentation](#documentation)
+- [Platform Support](#platform-support)
+- [License](#license)
+- [Related Projects](#related-projects)
+
+---
+
+## Why FastHardware?
+
+Standard Java approaches to hardware monitoring have fundamental limitations when used in production:
+
+- **`OperatingSystemMXBean`**: Only provides a 1-minute rolling load average (`getSystemLoadAverage()`) — not real-time CPU usage. Has no temperature, no per-core data, and no physical RAM (only JVM heap).
+- **`Runtime.freeMemory()`**: Reports JVM heap free memory only — completely unrelated to OS-level physical RAM.
+- **`wmic` / process spawning**: Executes a child process per call. Startup overhead is ~100–300 ms per query, utterly unsuitable for polling loops.
+- **No thermal sensor API**: Java has zero built-in access to CPU or GPU temperature. There is no standard API — full stop.
+
+**FastHardware** solves all of these by going directly to the OS:
+
+- **True CPU Usage**: PDH counter `\\Processor(_Total)\\% Processor Time` — registered once at startup, polled in microseconds for every subsequent call. Real-time, not delayed.
+- **Physical RAM**: Win32 `GlobalMemoryStatusEx` — a direct kernel memory table read in nanoseconds, returns actual OS-level free and total physical RAM.
+- **Temperature**: WMI `MSAcpi_ThermalZoneTemperature` in the `ROOT\WMI` namespace — native ACPI thermal zone readings via COM without any process spawn.
+- **Per-Core CPU**: One PDH counter per logical core, all polled in a single JNI call, returned as a `double[]`.
+
+---
+
+## Key Features
+
+- **📊 Real-Time Telemetry** — CPU%, per-core CPU%, CPU temperature, physical free RAM, total RAM, GPU temperature.
+- **⚡ Native Win32 Speed** — PDH counters registered once, polled in microseconds. RAM via `GlobalMemoryStatusEx`. Temperatures via WMI ACPI.
+- **🧊 Zero Heap Allocation** — All JNI calls use primitives (`jlong`, `jdouble`, `jdoubleArray`). No objects allocated per query. GC-invisible hot path.
+- **📦 Atomic Snapshot** — `getSnapshot()` captures all fields in a single native round-trip and returns a frozen `HardwareSnapshot` record.
+- **🔌 Auto-Loading Native** — `fasthardware.dll` is embedded inside the JAR. `FastCore` extracts and loads it automatically at runtime — no manual DLL path management.
+- **🖥️ Ecosystem Ready** — Integrates cleanly into the FastJava ecosystem. Feed telemetry into `FastAgent`, drive adaptive quality in `FastAnimation`, or gate resource-intensive `FastGPU` kernels.
+
+---
+
+## Real-Life Examples
+
+**System Health Dashboard** — poll every 500 ms and print live data:
+```java
+FastHardware hw = FastHardware.create();
+hw.getSnapshot(); Thread.sleep(1100); // warm up PDH
+
+while (true) {
+    HardwareSnapshot s = hw.getSnapshot();
+    System.out.printf("\rCPU: %4.1f%%  Temp: %2.0f°C  RAM: %4.0f MB free",
+        s.cpuUsagePercent(),
+        s.cpuTemperatureCelsius(),
+        s.freeRamBytes() / 1024.0 / 1024.0);
+    Thread.sleep(500);
+}
+```
+
+**Adaptive Quality Gate** — throttle workload when system is under pressure:
+```java
+FastHardware hw = FastHardware.create();
+
+public void onTick() {
+    double cpu = hw.getGlobalCpuUsage();
+    long freeRam = hw.getFreeMemoryBytes();
+
+    if (cpu > 85.0 || freeRam < 512 * 1024 * 1024L) {
+        renderEngine.setQuality(Quality.LOW);   // back off
+    } else {
+        renderEngine.setQuality(Quality.HIGH);  // full power
+    }
+}
+```
+
+**Per-Core Imbalance Detection** — find overloaded cores:
+```java
+double[] cores = hw.getPerCoreCpuUsage();
+for (int i = 0; i < cores.length; i++) {
+    if (cores[i] > 90.0) {
+        System.out.printf("⚠ Core %d overloaded: %.1f%%%n", i, cores[i]);
+    }
+}
+```
+
+---
+
+## Performance Benchmarks
+
+FastHardware is profiled using **JMH** against standard Java equivalents. Run `run-benchmark.bat` for live numbers.
+
+| Metric | Java JMX / Runtime | FastHardware Native | Notes |
+|--------|--------------------|---------------------|-------|
+| Full telemetry snapshot | 3× separate MXBean calls | **1× atomic JNI call** | PDH + WMI + RAM in one trip |
+| CPU usage | `getSystemLoadAverage()` (1-min rolling) | **PDH instantaneous** | Real-time vs. delayed average |
+| Per-core CPU | ❌ Not available | **`double[]` per logical core** | FastHardware exclusive |
+| Free RAM | `Runtime.freeMemory()` (JVM heap only) | **`GlobalMemoryStatusEx` (physical)** | OS-level, not JVM-scoped |
+| CPU temperature | ❌ Not available | **WMI ACPI `ROOT\WMI`** | FastHardware exclusive |
+| GPU temperature | ❌ Not available | **WMI (discrete GPUs)** | FastHardware exclusive |
+
+> [!NOTE]
+> CPU temperature accuracy depends on BIOS ACPI implementation. Intel integrated GPU platforms may report static ACPI thermal zone values — this is a firmware limitation, not a FastHardware bug. Discrete NVIDIA/AMD GPUs and desktop motherboards typically provide continuously updating values.
+
+*Measured on Windows 11, Intel Core i5-1135G7 (Surface Pro 8), JDK 21.0.12.*
 
 ---
 
@@ -69,14 +168,14 @@ System.out.printf("GPU Temp: %.1f°C%n",   snap.gpuTemperatureCelsius());
 
 | Method | Returns | Description |
 |--------|---------|-------------|
-| `FastHardware.create()` | `FastHardware` | Initializes the native library and returns a monitor instance. |
-| `getSnapshot()` | `HardwareSnapshot` | Atomic read of all telemetry fields in one native call. |
-| `getGlobalCpuUsage()` | `double` | CPU usage 0.0–100.0 via PDH `\\Processor(_Total)\\% Processor Time`. |
-| `getPerCoreCpuUsage()` | `double[]` | Per-logical-core CPU usage array via PDH. |
+| `FastHardware.create()` | `FastHardware` | Initializes native PDH + WMI and returns a monitor instance. |
+| `getSnapshot()` | `HardwareSnapshot` | Atomic read of all telemetry in one native call. |
+| `getGlobalCpuUsage()` | `double` | CPU usage 0.0–100.0 via PDH `\\Processor(_Total)`. |
+| `getPerCoreCpuUsage()` | `double[]` | Per-logical-core CPU usage via PDH. |
 | `getTotalMemoryBytes()` | `long` | Total physical RAM via `GlobalMemoryStatusEx`. |
 | `getFreeMemoryBytes()` | `long` | Free physical RAM via `GlobalMemoryStatusEx`. |
-| `getCpuTemperatureCelsius()` | `double` | CPU package temperature via WMI `MSAcpi_ThermalZoneTemperature` in `ROOT\WMI`. |
-| `getGpuTemperatureCelsius()` | `double` | GPU temperature via WMI (discrete GPUs; `0.0` on Intel integrated). |
+| `getCpuTemperatureCelsius()` | `double` | CPU temperature via WMI ACPI `ROOT\WMI`. |
+| `getGpuTemperatureCelsius()` | `double` | GPU temperature via WMI (0.0 if not available). |
 
 ### `HardwareSnapshot` (Record)
 
@@ -89,42 +188,26 @@ record HardwareSnapshot(
     double   cpuTemperatureCelsius,
     double   gpuTemperatureCelsius
 ) {
-    long freeRamBytes(); // helper: totalRamBytes - usedRamBytes
+    long freeRamBytes(); // totalRamBytes - usedRamBytes
 }
 ```
 
 ---
 
-## Performance Benchmarks
-
-FastHardware native Win32 JNI vs standard Java `OperatingSystemMXBean` / `Runtime`:
-
-| Metric | Java JMX / Runtime | FastHardware Native | Advantage |
-|--------|--------------------|---------------------|-----------|
-| Full telemetry snapshot | 3× separate MXBean calls | **1× atomic JNI call** | **3× fewer round-trips** |
-| CPU usage query | `getSystemLoadAverage()` (1-min rolling) | **PDH instantaneous** | **Real-time vs delayed** |
-| Per-core CPU usage | ❌ No API | **`double[]` per logical core** | **FastHardware exclusive** |
-| Free RAM (OS-level) | `Runtime.freeMemory()` (JVM heap only) | **`GlobalMemoryStatusEx` (physical)** | **System-wide accuracy** |
-| CPU temperature | ❌ No API | **WMI `ROOT\WMI` ACPI sensor** | **FastHardware exclusive** |
-| GPU temperature | ❌ No API | **WMI discrete GPU sensor** | **FastHardware exclusive** |
-
-*Run `run-benchmark.bat` for live JMH throughput numbers on your machine.*
-
----
-
 ## Examples & Demos
 
-| Case | File | Launcher | Description |
-|------|------|----------|-------------|
-| **Live Terminal Dashboard** | [Demo.java](examples/Demo/src/main/java/fasthardware/Demo.java) | `run-demo.bat` | ANSI terminal monitor — CPU%, CPU°C, RAM, GPU°C as live bars + scrolling sparklines. Pure FastHardware, no extra deps. |
-| **JMH Benchmark Suite** | [Benchmark.java](examples/Benchmark/src/main/java/fasthardware/benchmark/Benchmark.java) | `run-benchmark.bat` | 7-group JMH throughput suite comparing FastHardware native vs Java JMX/Runtime. |
+| Case | Java Example | Launcher | Description |
+|------|--------------|----------|-------------|
+| **Live Terminal Dashboard** | [Demo.java](examples/Demo/src/main/java/fasthardware/Demo.java) | `run-demo.bat` | ANSI terminal monitor — CPU%, CPU°C, RAM, GPU°C as neon bars + scrolling sparklines. Pure FastHardware, no extra deps. |
+| **JMH Benchmark Suite** | [Benchmark.java](examples/Benchmark/src/main/java/fasthardware/benchmark/Benchmark.java) | `run-benchmark.bat` | 7-group JMH throughput suite — FastHardware native vs Java JMX/Runtime across all telemetry dimensions. |
 
 ---
 
 ## Installation
 
 ### Option 1: Maven (Recommended)
-Add the JitPack repository and the dependencies to your `pom.xml`:
+
+Add the JitPack repository and the dependency to your `pom.xml`:
 
 ```xml
 <repositories>
@@ -141,8 +224,7 @@ Add the JitPack repository and the dependencies to your `pom.xml`:
         <artifactId>FastHardware</artifactId>
         <version>0.1.1</version>
     </dependency>
-
-    <!-- FastCore (Required Native Loader) -->
+    <!-- FastCore — Required Native JNI Loader -->
     <dependency>
         <groupId>com.github.andrestubbe</groupId>
         <artifactId>FastCore</artifactId>
@@ -152,6 +234,7 @@ Add the JitPack repository and the dependencies to your `pom.xml`:
 ```
 
 ### Option 2: Gradle (via JitPack)
+
 ```groovy
 repositories {
     maven { url 'https://jitpack.io' }
@@ -164,24 +247,23 @@ dependencies {
 ```
 
 ### Option 3: Direct Download (No Build Tool)
+
 1. 📦 **[FastHardware-0.1.1.jar](https://github.com/andrestubbe/FastHardware/releases/download/0.1.1/FastHardware-0.1.1.jar)** — The Core Library
-2. ⚙️ **[FastCore-0.1.0.jar](https://github.com/andrestubbe/FastCore/releases/download/0.1.0/fastcore-0.1.0.jar)** — The Mandatory Native Loader
+2. ⚙️ **[fastcore-0.1.0.jar](https://github.com/andrestubbe/FastCore/releases/download/0.1.0/fastcore-0.1.0.jar)** — Required Native JNI Loader
 
 > [!IMPORTANT]
-> Both JARs must be on your classpath. FastCore extracts `fasthardware.dll` to `%USERPROFILE%\.fastcore\native\` at runtime.
+> Both JARs must be on your classpath. `FastCore` extracts `fasthardware.dll` to `%USERPROFILE%\.fastcore\native\fasthardware\` at runtime automatically.
 
 ---
 
 ## Documentation
 
-| File | Description |
-|------|-------------|
-| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Win32 PDH, WMI COM, and JNI boundary details. |
-| [REFERENCE.md](docs/REFERENCE.md) | Full API specification and JNI contracts. |
-| [COMPILE.md](docs/COMPILE.md) | Build guide for the native DLL from source. |
-| [PHILOSOPHY.md](docs/PHILOSOPHY.md) | Why native-first telemetry matters in Java. |
-| [CHANGELOG.md](docs/CHANGELOG.md) | Version history. |
-| [ROADMAP.md](docs/ROADMAP.md) | Future development milestones. |
+* **[ARCHITECTURE.md](docs/ARCHITECTURE.md)**: Win32 PDH, WMI COM bridge, and JNI boundary architecture.
+* **[REFERENCE.md](docs/REFERENCE.md)**: Full API specification and JNI contracts.
+* **[COMPILE.md](docs/COMPILE.md)**: Build guide for compiling the native DLL from C++ source.
+* **[PHILOSOPHY.md](docs/PHILOSOPHY.md)**: Why native-first telemetry matters for Java performance monitoring.
+* **[CHANGELOG.md](docs/CHANGELOG.md)**: Version history and release notes.
+* **[ROADMAP.md](docs/ROADMAP.md)**: Planned milestones (NVAPI, ADL, async background poller).
 
 ---
 
@@ -190,8 +272,14 @@ dependencies {
 | Platform | Status |
 |----------|--------|
 | Windows 10 / 11 (x64) | ✅ Fully Supported |
-| Linux | 🔜 Planned |
-| macOS | 🔜 Planned |
+| Linux | 🚧 Planned |
+| macOS | 🚧 Planned |
+
+---
+
+## License
+
+MIT License — See [LICENSE](LICENSE) for details.
 
 ---
 
@@ -202,7 +290,9 @@ dependencies {
 - [FastGPU](https://github.com/andrestubbe/FastGPU) — Vulkan compute kernel dispatch for Java
 - [FastDisplay](https://github.com/andrestubbe/FastDisplay) — Native display refresh rate and resolution detection
 - [FastExecution](https://github.com/andrestubbe/FastExecution) — Sub-millisecond precision named loop and delay scheduler
+- [FastAnimation](https://github.com/andrestubbe/FastAnimation) — Ultra-fast native timeline animation engine
+- [FastTween](https://github.com/andrestubbe/FastTween) — Zero-overhead pooled tweening engine
 
 ---
 
-**Part of the FastJava Ecosystem** — *Making the JVM faster. Small package. Maximum speed. Zero bloat.* 🚀
+**Part of the FastJava Ecosystem** — *Making the JVM faster. Small package. Maximum speed. Zero bloat. 🚀🔋*
