@@ -5,26 +5,41 @@ cd /d "%~dp0"
 set "MAVEN_OPTS=--enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -Dorg.slf4j.simpleLogger.defaultLogLevel=warn"
 
 echo ===================================================
-echo  Building FastHardware ^& JMH Benchmarks Uber-Jar
+echo   FastHardware JMH Benchmark Suite
+echo   Native Win32/WMI vs Standard Java JMX/Runtime
 echo ===================================================
+echo.
 
-call mvn -q clean install -DskipTests 2>nul
+echo [1/2] Building FastHardware locally and installing to .m2...
+call mvn -q clean install -DskipTests
 if %ERRORLEVEL% NEQ 0 (
-    echo [ERROR] FastHardware install failed!
+    echo [ERROR] FastHardware build failed!
     pause
     exit /b %ERRORLEVEL%
 )
 
+echo [2/2] Packaging JMH uber-jar...
 cd examples\Benchmark
-call mvn -q clean package 2>nul
+call mvn -q clean package -DskipTests
 if %ERRORLEVEL% NEQ 0 (
-    echo [ERROR] Benchmark packaging failed!
+    echo [ERROR] JMH benchmark packaging failed!
+    cd ..\..
     pause
     exit /b %ERRORLEVEL%
 )
 
+echo.
 echo ===================================================
-echo  Running JMH Benchmarks (Throughput: ops/ms)
+echo   Running JMH Benchmarks (Throughput: ops/ms)
+echo   Warmup: 3x 1s   Measurement: 5x 1s   Fork: 1
 echo ===================================================
-java --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow "-Djava.library.path=..\..\src\main\resources\native;..\..\target\classes\native;src\main\resources\native" -jar target\benchmarks.jar -f 1 -wi 2 -i 3 -tu ms -bm thrpt
+echo.
+
+java --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -jar target\benchmarks.jar -f 1 -wi 3 -i 5 -tu ms -bm thrpt 2>&1
+
+cd ..\..
+echo.
+echo ===================================================
+echo   Done. Higher ops/ms = better throughput.
+echo ===================================================
 pause
