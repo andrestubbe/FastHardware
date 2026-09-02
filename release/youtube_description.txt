@@ -1,0 +1,29 @@
+TITLE:
+FastHardware: Real-Time Native System Telemetry & Polling Engine for Java (Win32 PDH, WMI & RAM)
+
+DESCRIPTION:
+Showcasing FastHardware — a zero-overhead native hardware telemetry and polling library for Java.
+
+Bypassing standard JVM abstractions like OperatingSystemMXBean and eliminating heavy wmic child process spawning, FastHardware connects directly to Win32 PDH performance counters, WMI COM thermal interfaces, and kernel memory tables.
+
+TECHNICAL HIGHLIGHTS:
+- Instantaneous CPU Tracking: PDH \Processor(_Total)\% Processor Time queried in microseconds.
+- Physical OS Memory: Real-time GlobalMemoryStatusEx tracking OS-wide RAM state (not JVM heap).
+- ACPI Thermal Telemetry: Dual-namespace WMI (ROOT\WMI + ROOT\CIMV2) COM integration.
+- Continuous Async Polling: User-controlled background polling engine delivering frozen HardwareSnapshot records.
+- Zero-GC JNI Hotpath: Pure primitive passing across native boundaries to eliminate GC pauses.
+- FastCore Auto-Loader: Fully embedded DLL architecture for seamless zero-config deployment.
+
+GITHUB REPOSITORIES:
+https://github.com/andrestubbe/FastHardware
+https://github.com/andrestubbe/FastCore
+https://github.com/andrestubbe/FastDWM
+https://github.com/andrestubbe/FastDisplay
+https://github.com/andrestubbe/FastGPU
+
+OUR PHILOSOPHY:
+No copies. Ever. Critical JNI paths. Native-First performance.
+If you're interested in pushing the JVM to its absolute limits using native bindings, subscribe for more.
+
+TAGS:
+Java, FastJava, FastHardware, JNI, Win32, PDH, WMI, Telemetry, SystemMonitoring, Performance, ZeroGC, HardwareMonitoring, CPUMonitor, WindowsKernel

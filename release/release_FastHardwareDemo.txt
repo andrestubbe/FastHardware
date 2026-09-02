@@ -1,0 +1,58 @@
+================================================================================
+YOUTUBE VIDEO RELEASE
+================================================================================
+
+TITLE:
+FastHardware: Real-Time Native System Telemetry & Polling Engine for Java (Win32 PDH, WMI & RAM)
+
+DESCRIPTION:
+Java traditionally lacks direct, low-latency access to true OS-level hardware counters. OperatingSystemMXBean only provides delayed rolling averages, Runtime.freeMemory() only reflects JVM heap state, and shelling out to wmic or PowerShell spawns heavy 200ms processes.
+
+FastHardware bridges Java directly to the Windows Kernel via high-performance C++ JNI bindings. In this showcase, FastHardware executes continuous sub-millisecond hardware telemetry polling across CPU usage, CPU temperature, per-core metrics, physical memory, and GPU stats with zero heap allocations.
+
+TECHNICAL HIGHLIGHTS:
+* Win32 PDH Counter Integration: Direct kernel hooks via PdhCollectQueryData for instantaneous CPU load tracking in microseconds.
+* Kernel Memory Status: Real-time physical RAM tracking via GlobalMemoryStatusEx directly reflecting OS-wide allocations.
+* Dual WMI COM Substrate: Direct query dispatch to ROOT\WMI (ACPI thermal zones) and ROOT\CIMV2 without process spawning.
+* User-Driven Background Polling: High-throughput async polling engine (startPolling) streaming atomic HardwareSnapshot records to Java consumers.
+* Zero Heap Allocation Hotpath: All JNI bridges utilize primitive types (jlong, jdouble, jdoubleArray), eliminating Garbage Collection interference.
+* FastCore Dynamic Extraction: Native DLL (fasthardware.dll) embedded in JAR and loaded automatically at runtime.
+
+GITHUB REPOSITORIES:
+* FastHardware: https://github.com/andrestubbe/FastHardware
+* FastCore: https://github.com/andrestubbe/FastCore
+* FastDWM: https://github.com/andrestubbe/FastDWM
+* FastDisplay: https://github.com/andrestubbe/FastDisplay
+* FastGPU: https://github.com/andrestubbe/FastGPU
+
+OUR PHILOSOPHY:
+No copies. Kernel direct. Native performance. Zero framework bloat. Making the JVM faster.
+
+TAGS:
+Java, FastJava, FastHardware, JNI, Win32, PDH, WMI, Telemetry, SystemMonitoring, Performance, ZeroGC, HardwareMonitoring, CPUMonitor, WindowsKernel
+
+
+================================================================================
+LINKEDIN POST (ANDRE STUBBE STYLE)
+================================================================================
+
+Warum muss ein Java-Programm eigentlich 200ms warten oder wmic als Prozess spawnen, nur um zu wissen, wie viel RAM oder CPU gerade frei ist?
+
+Genau das hat mich genervt. Standard-Java (OperatingSystemMXBean) liefert dir nur einen 1-Minuten-Gleitwert fuer die CPU, Runtime.freeMemory() kennt nur den eigenen JVM-Heap, und echte Hardware-Temperaturen existieren im JDK schlicht gar nicht.
+
+Deshalb gibt es jetzt FastHardware.
+
+Direkt ueber C++ JNI an den Windows-Kernel gekoppelt:
+* Win32 PDH (Performance Data Helper) fuer echte, ungemittelte CPU-Last in Mikrosekunden
+* Win32 GlobalMemoryStatusEx fuer echten physischen RAM des Betriebssystems
+* Duales WMI COM fuer ACPI-Thermal-Zones direkt ueber ROOT\WMI
+* Asynchrones Background-Polling mit atomaren HardwareSnapshot Records
+
+Das Ganze ohne Heap-Allokationen, ohne externe Tools, verpackt in eine saubere, minimale API mit automatischer FastCore DLL-Extraktion.
+
+Java muss nicht blind fuer das darunterliegende System sein. Man muss es nur direkt ansprechen.
+
+GitHub: https://github.com/andrestubbe/FastHardware
+Full ecosystem: https://github.com/andrestubbe
+
+#FastJava #FastHardware #JNI #Win32 #HardwareTelemetry #JavaPerformance #ZeroGC #SystemsProgramming
