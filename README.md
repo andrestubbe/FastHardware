@@ -12,6 +12,10 @@
 
 **FastHardware** gives your Java application direct access to real-time system health — CPU usage, CPU temperature, physical RAM, and GPU temperature — without shelling out to `wmic`, without polling `OperatingSystemMXBean`, and without spawning background processes. By binding directly to Win32 PDH counters and WMI COM objects via JNI, it delivers accurate, low-latency hardware telemetry at native speed.
 
+[**Watch the Demo (YouTube)**](https://youtu.be/86PBTGlfCXk)
+
+[![FastHardware Showcase](docs/screenshot.png)](https://youtu.be/86PBTGlfCXk)
+
 ---
 
 ## Quick Start
