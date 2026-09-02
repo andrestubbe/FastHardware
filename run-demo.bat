@@ -1,14 +1,27 @@
 @echo off
+setlocal
+chcp 65001 > nul
+cd /d "%~dp0"
 
-echo [INFO] Building FastHardware library...
+echo ===================================================
+echo   FastHardware Terminal Demo
+echo   Real-Time CPU / Temp / RAM / GPU Monitor
+echo ===================================================
+echo.
 
-echo [INFO] Compiling Demo...
+echo [1/2] Building Demo...
 cd examples\Demo
-call mvn compile dependency:copy-dependencies -U -DincludeScope=runtime -DskipTests
-if %ERRORLEVEL% NEQ 0 ( cd ..\.. & echo Compile failed. & pause & exit /b )
+call mvn compile dependency:copy-dependencies -U -DincludeScope=runtime -DskipTests -q
+if %ERRORLEVEL% NEQ 0 (
+    echo [ERROR] Build failed!
+    cd ..\..
+    pause
+    exit /b %ERRORLEVEL%
+)
 
-echo [INFO] Launching UI Demo...
-java -Dfile.encoding=UTF-8 --enable-native-access=ALL-UNNAMED -cp "target/classes;target/dependency/*" fasthardware.Demo
+echo [2/2] Launching Terminal Demo...  ^(Ctrl+C to exit^)
+echo.
+java --enable-native-access=ALL-UNNAMED -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -cp "target/classes;target/dependency/*" fasthardware.Demo
 
 cd ..\..
 pause
