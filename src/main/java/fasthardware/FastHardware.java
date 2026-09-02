@@ -32,4 +32,23 @@ public interface FastHardware {
 
     /** Returns the GPU temperature in Celsius (if available). */
     double getGpuTemperatureCelsius();
+
+    /**
+     * Starts continuous background polling at the specified interval in milliseconds.
+     * On each tick, the listener receives an atomic HardwareSnapshot.
+     *
+     * @param intervalMs polling frequency in milliseconds (e.g. 500ms or 1000ms)
+     * @param listener callback receiving fresh snapshots
+     */
+    void startPolling(long intervalMs, java.util.function.Consumer<HardwareSnapshot> listener);
+
+    /**
+     * Stops any active background polling loop.
+     */
+    void stopPolling();
+
+    /**
+     * Checks if background polling is currently active.
+     */
+    boolean isPolling();
 }

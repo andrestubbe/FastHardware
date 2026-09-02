@@ -22,26 +22,23 @@ import fasthardware.HardwareSnapshot;
 
 public class Example {
     public static void main(String[] args) throws InterruptedException {
-        // Initialize once — opens PDH query + WMI COM connection
+        // 1. Create monitor instance (initializes native PDH + WMI once)
         FastHardware hw = FastHardware.create();
 
-        // PDH CPU counters need one collection interval (~1s) before returning real data
-        Thread.sleep(1100);
+        // 2. Option A: Continuous background polling with callbacks
+        hw.startPolling(500, snapshot -> {
+            System.out.printf("CPU: %5.1f%% | Temp: %4.1f°C | RAM Free: %d MB%n",
+                snapshot.cpuUsagePercent(),
+                snapshot.cpuTemperatureCelsius(),
+                snapshot.freeRamBytes() / 1024 / 1024);
+        });
 
-        // Atomic snapshot of all telemetry in a single native call
+        Thread.sleep(5000);
+        hw.stopPolling();
+
+        // 3. Option B: Atomic synchronous pull
         HardwareSnapshot snap = hw.getSnapshot();
-
-        System.out.printf("CPU Usage:    %.1f%%%n",  snap.cpuUsagePercent());
-        System.out.printf("CPU Temp:     %.1f°C%n",  snap.cpuTemperatureCelsius());
-        System.out.printf("RAM Free:     %d MB%n",   snap.freeRamBytes()  / 1024 / 1024);
-        System.out.printf("RAM Total:    %d MB%n",   snap.totalRamBytes() / 1024 / 1024);
-        System.out.printf("GPU Temp:     %.1f°C%n",  snap.gpuTemperatureCelsius());
-
-        // Or query individual metrics
-        double[] perCore = hw.getPerCoreCpuUsage();
-        for (int i = 0; i < perCore.length; i++) {
-            System.out.printf("  Core %d:  %.1f%%%n", i, perCore[i]);
-        }
+        System.out.printf("Instant CPU: %.1f%%%n", snap.cpuUsagePercent());
     }
 }
 ```
@@ -165,7 +162,10 @@ FastHardware is profiled using **JMH** against standard Java equivalents. Run `r
 | Method | Returns | Description |
 |--------|---------|-------------|
 | `FastHardware.create()` | `FastHardware` | Initializes native PDH + WMI and returns a monitor instance. |
-| `getSnapshot()` | `HardwareSnapshot` | Atomic read of all telemetry in one native call. |
+| `startPolling(intervalMs, listener)` | `void` | Starts continuous async background polling emitting atomic `HardwareSnapshot` records. |
+| `stopPolling()` | `void` | Stops any active background polling loop. |
+| `isPolling()` | `boolean` | Returns `true` if continuous polling is active. |
+| `getSnapshot()` | `HardwareSnapshot` | Atomic synchronous read of all telemetry in one native call. |
 | `getGlobalCpuUsage()` | `double` | CPU usage 0.0–100.0 via PDH `\\Processor(_Total)`. |
 | `getPerCoreCpuUsage()` | `double[]` | Per-logical-core CPU usage via PDH. |
 | `getTotalMemoryBytes()` | `long` | Total physical RAM via `GlobalMemoryStatusEx`. |

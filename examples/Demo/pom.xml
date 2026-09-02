@@ -30,6 +30,12 @@
             <artifactId>FastHardware</artifactId>
             <version>0.1.0</version>
         </dependency>
+        <!-- FastANSI (Styling) -->
+        <dependency>
+            <groupId>com.github.andrestubbe</groupId>
+            <artifactId>FastANSI</artifactId>
+            <version>0.1.0</version>
+        </dependency>
 
 
     </dependencies>
