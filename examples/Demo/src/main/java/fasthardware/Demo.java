@@ -179,6 +179,12 @@ public class Demo {
         System.out.print(ALT_ON + HIDE_CURSOR);
         System.out.flush();
 
+        // Warm-up: PDH CPU counters need one interval before returning real data
+        try {
+            hw.getSnapshot();
+            Thread.sleep(1100);
+        } catch (Throwable ignored) {}
+
         // Try to detect terminal width
         int termW = 120;
         try {
