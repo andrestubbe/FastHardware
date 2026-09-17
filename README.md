@@ -53,7 +53,7 @@ public class Example {
 
 - [Why FastHardware?](#why-fasthardware)
 - [Key Features](#key-features)
-- [Real-Life Examples](#real-life-examples)
+- [Real-World Use Cases](#real-world-use-cases)
 - [Performance Benchmarks](#performance-benchmarks)
 - [API Quick Reference](#api-quick-reference)
 - [Technical Demos & Benchmarks](#technical-demos--benchmarks)
@@ -276,11 +276,11 @@ dependencies {
 
 ## Platform Support
 
-| Platform | Status |
-|----------|--------|
-| Windows 10 / 11 (x64) | ✅ Fully Supported |
-| Linux | 🚧 Planned |
-| macOS | 🚧 Planned |
+| Platform | Architecture | Status | Notes |
+|:---|:---|:---|:---|
+| Windows 10/11 | x64, ARM64 | ✅ Fully Supported | Win32 PDH, WMI COM & GlobalMemoryStatusEx JNI |
+| Linux | x64, ARM64 | 🚧 Planned | `/sys` & `/proc` kernel virtual filesystem telemetry |
+| macOS | Apple Silicon, x64 | 🚧 Planned | `sysctl` & IOKit hardware sensor bindings |
 
 ---
 
