@@ -81,6 +81,13 @@ Standard Java approaches to hardware monitoring have fundamental limitations whe
 - **Temperature**: WMI `MSAcpi_ThermalZoneTemperature` in the `ROOT\WMI` namespace — native ACPI thermal zone readings via COM without any process spawn.
 - **Per-Core CPU**: One PDH counter per logical core, all polled in a single JNI call, returned as a `double[]`.
 
+| Feature | OperatingSystemMXBean | OSHI (Java) | FastHardware |
+|:---|:---|:---|:---|
+| **CPU Telemetry** | 1-min load average (delayed) | Heavy polling layers | **Instant PDH counter (< 1 µs query)**|
+| **Physical RAM** | JVM Heap only (unrelated to OS)| JNA struct mapping overhead | **`GlobalMemoryStatusEx` in nanoseconds**|
+| **Thermal Sensors** | Not supported | COM/JNA process overhead | **Direct ACPI thermal zone via WMI COM**|
+| **Per-Query GC Churn** | Creates JVM MXBean wrapper | Heavy JNA object allocations | **Zero GC (Primitive JNI hot path)** |
+
 ---
 
 ## Key Features
