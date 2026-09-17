@@ -56,7 +56,7 @@ public class Example {
 - [Real-Life Examples](#real-life-examples)
 - [Performance Benchmarks](#performance-benchmarks)
 - [API Quick Reference](#api-quick-reference)
-- [Examples & Demos](#examples--demos)
+- [Technical Demos & Benchmarks](#technical-demos--benchmarks)
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [Platform Support](#platform-support)
@@ -201,10 +201,10 @@ record HardwareSnapshot(
 
 ---
 
-## Examples & Demos
+## Technical Demos & Benchmarks
 
 | Case | Java Example | Launcher | Description |
-|------|--------------|----------|-------------|
+|:---|:---|:---|:---|
 | **Live Terminal Dashboard** | [Demo.java](examples/Demo/src/main/java/fasthardware/Demo.java) | `run-demo.bat` | ANSI terminal monitor — CPU%, CPU°C, RAM, GPU°C as neon bars + scrolling sparklines. Pure FastHardware, no extra deps. |
 | **JMH Benchmark Suite** | [Benchmark.java](examples/Benchmark/src/main/java/fasthardware/benchmark/Benchmark.java) | `run-benchmark.bat` | 7-group JMH throughput suite — FastHardware native vs Java JMX/Runtime across all telemetry dimensions. |
 
